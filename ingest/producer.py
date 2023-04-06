@@ -33,10 +33,7 @@ producer = KafkaProducer(
     bootstrap_servers=['localhost:9092'],
 )
 
-if __name__ == '__main__':
-
-    url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
-    #On appelle la fonction qui permet de scrapper les feeds 
+def send_to_producer(url):
     articles = scraping_feed(url)
 
 
@@ -47,3 +44,18 @@ if __name__ == '__main__':
         except KafkaError as e:
             print(f"Failed to send message to Kafka: {e}")
         producer.flush()
+
+if __name__ == '__main__':
+
+    # url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
+    # #On appelle la fonction qui permet de scrapper les feeds 
+    # articles = scraping_feed(url)
+
+
+    # #on envoie chaque article dans le producer kafka pour les stocker
+    # for article in articles:
+    #     try:
+    #         producer.send('flux_rss', key = article['article_id'].encode(), value=json.dumps(article).encode())
+    #     except KafkaError as e:
+    #         print(f"Failed to send message to Kafka: {e}")
+    #     producer.flush()

@@ -1,7 +1,7 @@
 #Dependencies
 from flask import Flask,render_template,session,redirect,url_for, request, jsonify,send_from_directory
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, FieldList
 from wtforms.validators import DataRequired
 
 from common.article import Article
@@ -16,7 +16,7 @@ class NameForm(FlaskForm):
     submit = SubmitField("Login")
 
 class ArticleForm(FlaskForm):
-    articles = [StringField("Article 1"), StringField("Article 2"), StringField("Article 3"), StringField("Article 4")]
+    articles = FieldList(StringField("Article"), min_entries=4, max_entries=4)
     submit = SubmitField("Save")
 
     def get_articles(self):
@@ -58,25 +58,18 @@ def login():
     return render_template("login.html",
                            form=form)
 
-#user page / 10 articles
+#user page / save articles
 @app.route("/articles", methods=['GET', 'POST'])
-def user(self):
-    articles = None
+def user():
     form = ArticleForm()
     name = session.get('name')
     print(f'Got session name: {name}')
     if not name:
         return redirect(url_for('login'))
     if request.method == "POST":
-        articles = form.get_articles()
         form.save()
         form.articles.data = ''
-    return render_template('user.html', user_id=name, articles=articles)
-
-#Détail d'un article
-@app.route("/articles/<article_id>", methods=['GET'])
-def article(self, article_id):
-    result = self.__class__.repository.findOneArticle(article_id)
+    return render_template('user.html', user_id=name, form=form)
 
 #Create custom error pages
 

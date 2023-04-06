@@ -33,6 +33,7 @@ class ArticleRepository(object):
                 "JOIN " + config.cassandra_table_user + " ON user.user_id = feed.user_id" +
                 "WHERE user.user_id = " + user_id +
                 " ORDER BY article.pubDate DESC LIMIT 10;"
+                # pas bon refaire avec la nouvelle bdd
         ).all()
 
         result = []

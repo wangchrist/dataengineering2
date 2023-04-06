@@ -2,10 +2,12 @@ import feedparser
 import requests
 import json
 def scraping_feed(url):
-    
+
     feed = feedparser.parse(url)
-    articles =[]
-    
+
+    url = 'http://localhost:8888/articles'
+    headers = {'Content-Type': 'scraping_flux_RSS'}
+
     for entry in feed.entries:
         article = {
             "title": entry.title,
@@ -14,7 +16,4 @@ def scraping_feed(url):
             "description": entry.summary,
             "guid": entry.id
         }
-        articles.append(article)
-    url = 'http://localhost:8888/articles'
-    headers = {'Content-Type': 'scraping_flux_RSS'}
-    return requests.post(url, data=json.dumps(articles), headers=headers)
+        requests.post(url, data=json.dumps(article), headers=headers)

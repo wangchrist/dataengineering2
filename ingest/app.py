@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import scraping_feed
 from confluent_kafka import Producer
 from flask import Flask, request, Response
 from flask_classful import FlaskView, route
@@ -40,19 +41,19 @@ class IngestView(FlaskView):
 
         return Response(status=HTTPStatus.OK)
     
-    @route("/articles/", methods=['POST'])
-    def article(self, article_id):
-        feed_id = request.json['feed_id']
-        article_id = request.json['article_id']
-        title = request.json['title']
-        pubDate = request.json['pubDate']
-        description = request.json['description']
-        link = request.json['link']
-        article = Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
-        print("ingesting article: %s" % article)
-        self.__class__.producer.send(article)
+    # @route("/articles/", methods=['POST'])
+    # def article(self, article_id):
+    #     feed_id = request.json['feed_id']
+    #     article_id = request.json['article_id']
+    #     title = request.json['title']
+    #     pubDate = request.json['pubDate']
+    #     description = request.json['description']
+    #     link = request.json['link']
+    #     article = Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
+    #     print("ingesting article: %s" % article)
+    #     self.__class__.producer.send(article)
 
-        return Response(status=HTTPStatus.OK)
+    #     return Response(status=HTTPStatus.OK)
 
 
 def main():
@@ -68,4 +69,7 @@ def main():
     app.run("0.0.0.0", port, debug=True)
 
 if __name__ == '__main__':
+    url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
+    scraping_feed(url)
+    
     main()

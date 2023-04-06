@@ -26,8 +26,13 @@ class ArticleRepository(object):
 
     def findLast10ArticleSummaries(self, user_id: str) -> List[ArticleSummary]:
         rows = self.__connection.execute(
-            "SELECT feed_id, article_id, title, pubDate FROM " + config.cassandra_table + " ORDER BY pubDate DESC LIMIT 10"
-            #faire requête prenant en compte l'user id
+            # "SELECT feed_id, article_id, title, pubDate FROM " + config.cassandra_table + " ORDER BY pubDate DESC LIMIT 10"
+            "SELECT article.feed_id, article.article_id, article.title, article.pubDate" +
+                "FROM " + config.cassandra_table_article +
+                "JOIN " + config.cassandra_table_feed + " ON feed.feed_id = article.feed_id" +
+                "JOIN " + config.cassandra_table_user + " ON user.user_id = feed.user_id" +
+                "WHERE user.user_id = " + user_id +
+                " ORDER BY article.pubDate DESC LIMIT 10;"
         ).all()
 
         result = []

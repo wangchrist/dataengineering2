@@ -60,7 +60,7 @@ if __name__ == '__main__':
     #on envoie chaque article dans le producer kafka pour les stocker
     for article in articles:
         try:
-            producer.send('article-ingest', value=json.dumps(article).encode())
+            producer.send('article-ingest', key=article['title'].encode(), value=json.dumps(article).encode())
         except KafkaError as e:
             print(f"Failed to send message to Kafka: {e}")
         producer.flush()

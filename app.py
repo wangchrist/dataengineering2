@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired
 
 from common.article import Article
 from common.repository import ArticleRepository
+from ingest.producer import send_to_producer
 
 # App
 app = Flask(__name__)
@@ -24,8 +25,9 @@ class ArticleForm(FlaskForm):
     submit = SubmitField("Save")
     
     def save(self):
-        link = Article(**self.link) #la classe Article dans common article.py
-        self.__class__.repository.saveArticles(self, link)
+        # link = Article(**self.link) #la classe Article dans common article.py
+        # self.__class__.repository.saveArticles(self, link)
+        send_to_producer(self.link)
 
 
 #Routers

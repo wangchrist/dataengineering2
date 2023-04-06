@@ -36,7 +36,6 @@ producer = KafkaProducer(
 def send_to_producer(url):
     articles = scraping_feed(url)
 
-
     #on envoie chaque article dans le producer kafka pour les stocker
     for article in articles:
         try:

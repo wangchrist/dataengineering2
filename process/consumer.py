@@ -21,7 +21,9 @@ if __name__ == '__main__':
         'article-ingest',
         bootstrap_servers='localhost:9092',
         auto_offset_reset='earliest'
-    )    cluster = Cluster()
+    )    
+    
+    cluster = Cluster()
 
     try:
         connection = cluster.connect()

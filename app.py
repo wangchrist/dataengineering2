@@ -4,6 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
+from common.article import Article
+
 # App
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret key"
@@ -66,6 +68,7 @@ def user(self):
     if not name:
         return redirect(url_for('login'))
     if request.method == "POST":
+        articles = form.get_articles()
         form.save()
         form.articles.data = ''
     return render_template('user.html', user_id=name, articles=articles)

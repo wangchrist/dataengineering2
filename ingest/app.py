@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
-import scraping_feed
+from scraping import scraping_feed
 from confluent_kafka import Producer
 from flask import Flask, request, Response
 from flask_classful import FlaskView, route
 
-from common import config
+from common.config import ingestTopic, ingestPort, kafkaHost
 from common.article import Article
 
 import json
@@ -57,11 +57,11 @@ class IngestView(FlaskView):
 
 
 def main():
-    topic = config.ingestTopic
-    port = config.ingestPort
+    topic = ingestTopic
+    port = ingestPort
     route_base = "/api"
 
-    producer = Producer({'bootstrap.servers': config.kafkaHost})
+    producer = Producer({'bootstrap.servers': kafkaHost})
     IngestView.producer = ArticleProducer(producer, topic)
 
     app = Flask(__name__)
@@ -71,5 +71,5 @@ def main():
 if __name__ == '__main__':
     url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
     scraping_feed(url)
-    
+
     main()

@@ -1,21 +1,22 @@
 import requests
 
-from microservices.common.stock import Stock
-from microservices.common import config
+from common.article import Article
+from common import config
 
 import random
 import time
 
+#créer des articles random ??? 
 
-class StockSender(object):
+class ArticleSender(object):
     def __init__(self, host: str, port: int):
         self.__host = host
         self.__port = port
 
-    def send(self, stock: Stock):
-        data = stock.toJson()
+    def send(self, article: Article):
+        data = article.toJson()
         response = requests.post(
-            "http://%s:%s/api/stocks/%s" % (self.__host, self.__port, stock.id),
+            "http://%s:%s/api/aricles/%s" % (self.__host, self.__port, article.article_id),
             json=data
         )
         try:
@@ -25,15 +26,15 @@ class StockSender(object):
 
 
 if __name__ == '__main__':
-    stock_ids = range(0, 20)
+    article_ids = range(0, 20)
     host = "localhost"
     port = config.ingestPort
 
-    sender = StockSender(host, port)
+    sender = ArticleSender(host, port)
 
     while True:
-        id = str(random.choice(stock_ids))
+        id = str(random.choice(article_ids))
         quantity = random.randint(1, 100)
-        stock = Stock(id=id, quantity=quantity)
-        sender.send(stock)
+        article = Article(id=id, quantity=quantity)
+        sender.send(article)
         time.sleep(1)

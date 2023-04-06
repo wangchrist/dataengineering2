@@ -13,8 +13,8 @@ class ArticleRepository(object):
 
     def findOneArticle(self, article_id: str) -> Optional[Article]:
         row = self.__connection.execute(
-            "SELECT feed_id, title, pubDate, description, link FROM " + config.cassandra_table + " WHERE article_id = %s",
-            (article_id,)
+            "SELECT feed_id, title, pubDate, description, link FROM project.article WHERE article_id = %s",
+            (article_id)
         ).one()
 
         if row is None:
@@ -28,9 +28,9 @@ class ArticleRepository(object):
         rows = self.__connection.execute(
             # "SELECT feed_id, article_id, title, pubDate FROM " + config.cassandra_table + " ORDER BY pubDate DESC LIMIT 10"
             "SELECT article.feed_id, article.article_id, article.title, article.pubDate" +
-                "FROM " + config.cassandra_table_article +
-                "JOIN " + config.cassandra_table_feed + " ON feed.feed_id = article.feed_id" +
-                "JOIN " + config.cassandra_table_user + " ON user.user_id = feed.user_id" +
+                "FROM project.article" +
+                "JOIN project.feed ON feed.feed_id = article.feed_id" +
+                "JOIN project.user ON user.user_id = feed.user_id" +
                 "WHERE user.user_id = " + user_id +
                 " ORDER BY article.pubDate DESC LIMIT 10;"
                 # pas bon refaire avec la nouvelle bdd
@@ -46,6 +46,6 @@ class ArticleRepository(object):
     def saveArticles(self, articles: List[Article]):
         for article in articles:
             self.__connection.execute(
-                "INSERT INTO " + config.cassandra_table + " (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
+                "INSERT INTO project.table (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
                 (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
             )

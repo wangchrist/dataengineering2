@@ -1,16 +1,16 @@
 import json
-
+from datetime import datetime
 
 class Article(object):
     feed_id: str
     article_id: str
     title: str
-    pubDate: str
+    pubDate: datetime
     description: str
     link: str
     
 
-    def __init__(self, feed_id: str, article_id: str, title: str, pubDate: str, description: str, link: str):
+    def __init__(self, feed_id: str, article_id: str, title: str, pubDate: datetime, description: str, link: str):
         self.feed_id = feed_id
         self.article_id = article_id
         self.title = title
@@ -33,10 +33,10 @@ class ArticleSummary(object):
     feed_id: str
     article_id: str
     title: str
-    pubDate: str #datetime plutot ?
+    pubDate: datetime
     
 
-    def __init__(self, feed_id: str, article_id: str, title: str, pubDate: str):
+    def __init__(self, feed_id: str, article_id: str, title: str, pubDate: datetime):
         self.feed_id = feed_id
         self.article_id = article_id
         self.title = title

@@ -5,6 +5,7 @@ from wtforms import StringField, SubmitField, FieldList
 from wtforms.validators import DataRequired
 
 from common.article import Article
+from common.repository import ArticleRepository
 
 # App
 app = Flask(__name__)
@@ -16,22 +17,15 @@ class NameForm(FlaskForm):
     submit = SubmitField("Login")
 
 class ArticleForm(FlaskForm):
-    articles = FieldList(StringField("Article"), min_entries=4, max_entries=4)
-    submit = SubmitField("Save")
 
-    def get_articles(self):
-        article_list = []
-        for article in self.articles:
-            if article.data:
-                article_list.append(article)
-        return article_list
+    repository: ArticleRepository = None
+
+    link = StringField("Put your link", validators=[DataRequired()])
+    submit = SubmitField("Save")
     
     def save(self):
-        articles = []
-        for data in self.get_articles():
-            article = Article(**data) #la classe Article dans common article.py
-            articles.append(article)
-        self.__class__.repositorysaveArticles(self, articles)
+        link = Article(**self.link) #la classe Article dans common article.py
+        self.__class__.repository.saveArticles(self, link)
 
 
 #Routers
@@ -68,7 +62,7 @@ def user():
         return redirect(url_for('login'))
     if request.method == "POST":
         form.save()
-        form.articles.data = ''
+        form.link.data = ''
     return render_template('user.html', user_id=name, form=form)
 
 #Create custom error pages

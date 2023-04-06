@@ -5,19 +5,17 @@
 
     <h1>Hello {{user_id | capitalize}}</h1>
     
-    <p>Save the articles you want</p>
+    <p>Save the link you want</p>
     <br/>
 
     <form method="POST">
-        {% for article in form.articles %}
-            {{ article.label(
-                class="form-label"
-            )}}
-            {{ article(
-                class="form-control"
-            ) }}
-            <br/>
-        {% endfor %}
+        {{form.link.label(
+            class="form-label"
+        )}}
+        {{form.link(
+            class="form-control"
+        )}}
+        <br/>
         {{ form.submit() }}
     </form>
 

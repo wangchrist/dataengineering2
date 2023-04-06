@@ -32,12 +32,11 @@ class ArticleRepository(object):
     def __init__(self, connection: Session):
         self.__connection = connection
 
-    def saveArticles(self, articles: List[Article]):
-        for article in articles:
-            self.__connection.execute(
-                "INSERT INTO " + config.cassandra_table + " (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
-                (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
-            )
+    def save(self, article: Article):
+        self.__connection.execute(
+            "INSERT INTO " + config.cassandra_table + " (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
+            (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
+        )
 
 
 class ProcessService(object):
@@ -49,6 +48,13 @@ class ProcessService(object):
         article = self.__consumer.next_article()
         if article is not None:
             self.__connection.save(article)
+    
+    # def saveArticles(self, articles: List[Article]):
+    #     for article in articles:
+    #         self.__connection.execute(
+    #             "INSERT INTO " + config.cassandra_table + " (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
+    #             (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
+    #         )
 
 
 if __name__ == '__main__':

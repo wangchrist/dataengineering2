@@ -22,23 +22,37 @@ class ArticleProducer(object):
         self.__producer.flush(0.5)
 
 
-# class IngestView(FlaskView):
-#     producer: ArticleProducer = None
+class IngestView(FlaskView):
+    producer: ArticleProducer = None
 
     
-#     @route("/articles/<article_id>", methods=['POST'])
-#     def article(self, article_id):
-#         feed_id = request.json['feed_id']
-#         article_id = request.json['article_id']
-#         title = request.json['title']
-#         pubDate = request.json['pubDate']
-#         description = request.json['description']
-#         link = request.json['link']
-#         article = Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
-#         print("ingesting article: %s" % article)
-#         self.__class__.producer.send(article)
+    @route("/articles/<article_id>", methods=['POST'])
+    def article(self, article_id):
+        feed_id = request.json['feed_id']
+        article_id = request.json['article_id']
+        title = request.json['title']
+        pubDate = request.json['pubDate']
+        description = request.json['description']
+        link = request.json['link']
+        article = Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
+        print("ingesting article: %s" % article)
+        self.__class__.producer.send(article)
 
-#         return Response(status=HTTPStatus.OK)
+        return Response(status=HTTPStatus.OK)
+    
+    @route("/articles/", methods=['POST'])
+    def article(self, article_id):
+        feed_id = request.json['feed_id']
+        article_id = request.json['article_id']
+        title = request.json['title']
+        pubDate = request.json['pubDate']
+        description = request.json['description']
+        link = request.json['link']
+        article = Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
+        print("ingesting article: %s" % article)
+        self.__class__.producer.send(article)
+
+        return Response(status=HTTPStatus.OK)
 
 
 def main():
@@ -47,30 +61,11 @@ def main():
     route_base = "/api"
 
     producer = Producer({'bootstrap.servers': config.kafkaHost})
-    # IngestView.producer = ArticleProducer(producer, topic)
+    IngestView.producer = ArticleProducer(producer, topic)
 
-    # app = Flask(__name__)
-    # IngestView.register(app, route_base=route_base)
-    # app.run("0.0.0.0", port, debug=True)
-
-    urls = [
-    # "https://www.linux-magazine.com/rss/feed/lmi_news",
-    # "https://www.lemonde.fr/sciences/rss_full.xml",
-    # "https://www.lemonde.fr/rss/une.xml",
-    "https://www.cert.ssi.gouv.fr/alerte/feed/" 
-    ]
-    #On appelle la fonction qui permet de scrapper les feeds 
-    articles = scraping_feed(urls)
-    print(articles)
-
-    #on envoie chaque article dans le producer kafka pour les stocker
-    for article in articles:
-        try:
-            producer.send('article-ingest', value=json.dumps(article).encode())
-        except KafkaError as e:
-            print(f"Failed to send message to Kafka: {e}")
-        producer.flush()
-
+    app = Flask(__name__)
+    IngestView.register(app, route_base=route_base)
+    app.run("0.0.0.0", port, debug=True)
 
 if __name__ == '__main__':
     main()

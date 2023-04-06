@@ -1,0 +1,18 @@
+{%extends 'base_content.html'%}
+
+
+{%block content%}
+
+    <h1>Hello {{user_id | capitalize}}</h1>
+    
+    <p>Save the articles you want</p>
+    <br/>
+
+    <form method="POST">
+        {% for article in form.get_articles() %}
+            {{ article.label }}: {{ article() }}
+        {% endfor %}
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

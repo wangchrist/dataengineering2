@@ -9,8 +9,14 @@
     <br/>
 
     <form method="POST">
-        {% for article in form.get_articles() %}
-            {{ article.label }}: {{ article() }}
+        {% for article in articles %}
+            {{ article.label(
+                class="form-label"
+            )}}
+            {{ article(
+                class="form-control"
+            ) }}
+            <br/>
         {% endfor %}
         {{ form.submit() }}
     </form>

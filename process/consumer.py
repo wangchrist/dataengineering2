@@ -36,19 +36,14 @@ def save(article: Article, connection: Session):
         #     "INSERT INTO project.user_feed (user_id, feed_id) VALUES (%s, %s);",
         #     (user_id, article.feed_id)
         # )
-        
 
-             
-            
-        
-if __name__ == '__main__':
-    # Kafka Consumer 
-    consumer = KafkaConsumer(
+consumer = KafkaConsumer(
         'flux_rss',
         bootstrap_servers='localhost:9092',
         auto_offset_reset='earliest'
     )
 
+def run_consumer():
     cluster = Cluster()
 
     try:
@@ -63,4 +58,13 @@ if __name__ == '__main__':
 
     finally:
         cluster.shutdown()
-        consumer.close()
+        consumer.close()         
+            
+        
+# if __name__ == '__main__':
+    # Kafka Consumer 
+    # consumer = KafkaConsumer(
+    #     'flux_rss',
+    #     bootstrap_servers='localhost:9092',
+    #     auto_offset_reset='earliest'
+    # )

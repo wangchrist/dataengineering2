@@ -20,8 +20,8 @@ class ArticleRepository(object):
         if row is None:
             return None
         else:
-            (feed_id, article_id, title, pubDate, description, link) = row
-            return Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link)
+            (feed_id, article_id, title, pubDate, description, link, user_id) = row
+            return Article(feed_id=feed_id, article_id=article_id, title=title, pubDate=pubDate, description=description, link=link, user_id=user_id)
 
 
     def findLast10ArticleSummaries(self, user_id: str) -> List[ArticleSummary]:
@@ -34,9 +34,8 @@ class ArticleRepository(object):
             #     "WHERE user.user_id = " + user_id +
             #     " ORDER BY article.pubDate DESC LIMIT 10;"
 
-                "SELECT article_id, pubDate, title, description, link FROM project.article" +
-                "WHERE feed_id IN (SELECT feed_in FROM project.user_feed WHERE user_id =" + user_id +
-                ")ORDER BY pubDate DESC LIMIT 10;"
+                "SELECT feed_id, article_id, pubDate, title, description, link FROM project.article" +
+                " WHERE user_id =" + user_id + ")ORDER BY pubDate DESC LIMIT 10;"
                 
                 # pas bon refaire avec la nouvelle bdd
         ).all()
@@ -51,6 +50,6 @@ class ArticleRepository(object):
     def saveArticles(self, articles: List[Article]):
         for article in articles:
             self.__connection.execute(
-                "INSERT INTO project.table (feed_id, article_id, title, pubDate, description, link) VALUES (%s, %s, %s, %s, %s, %s);",
-                (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
+                "INSERT INTO project.table (feed_id, article_id, title, pubDate, description, link, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s);",
+                (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link, article.user_id)
             )

@@ -31,6 +31,7 @@ def scraping_feed(url):
 # On crée le Kafka Producer
 producer = KafkaProducer(
     bootstrap_servers=['localhost:9092'],
+    api_version=(0, 10, 2)
 )
 
 def send_to_producer(url, name):

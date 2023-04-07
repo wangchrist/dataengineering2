@@ -8,7 +8,6 @@ from cassandra.cluster import Cluster
 from common.article import Article
 from common.repository import ArticleRepository
 from ingest.producer import send_to_producer
-from process.consumer import run_consumer
 
 # App
 app = Flask(__name__)
@@ -26,11 +25,10 @@ class ArticleForm(FlaskForm):
     link = StringField("Put your link", validators=[DataRequired()])
     submit = SubmitField("Save")
     
-    def save(self, name):
+    def save(self):
         # link = Article(**self.link) #la classe Article dans common article.py
         # self.__class__.repository.saveArticles(self, link)
-        send_to_producer(self.link, name)
-        run_consumer()
+        send_to_producer(self.link)
 
 class Article_IdForm(FlaskForm):
     article_id = StringField("Article_id you want to read", validators=[DataRequired()])
@@ -70,7 +68,7 @@ def user():
     if not name:
         return redirect(url_for('login'))
     if request.method == "POST":
-        form.save(name)
+        form.save()
         form.link.data = ''
     return render_template('user.html', user_id=name, form=form)
 
@@ -90,7 +88,7 @@ def one_article():
 #user's 10 last articles
 @app.route("/articles/userArticles")
 def ten_articles():
-    ID = session.get("name")
+    ID = "John"
     bdd = Cluster()
     session = bdd.connect()
     rep = ArticleRepository(session)

@@ -27,12 +27,17 @@ class ArticleRepository(object):
     def findLast10ArticleSummaries(self, user_id: str) -> List[ArticleSummary]:
         rows = self.__connection.execute(
             # "SELECT feed_id, article_id, title, pubDate FROM " + config.cassandra_table + " ORDER BY pubDate DESC LIMIT 10"
-            "SELECT article.feed_id, article.article_id, article.title, article.pubDate" +
-                "FROM project.article" +
-                "JOIN project.feed ON feed.feed_id = article.feed_id" +
-                "JOIN project.user ON user.user_id = feed.user_id" +
-                "WHERE user.user_id = " + user_id +
-                " ORDER BY article.pubDate DESC LIMIT 10;"
+            # "SELECT article.feed_id, article.article_id, article.title, article.pubDate" +
+            #     "FROM project.article" +
+            #     "JOIN project.feed ON feed.feed_id = article.feed_id" +
+            #     "JOIN project.user ON user.user_id = feed.user_id" +
+            #     "WHERE user.user_id = " + user_id +
+            #     " ORDER BY article.pubDate DESC LIMIT 10;"
+
+                "SELECT article_id, pubDate, title, description, link FROM project.article" +
+                "WHERE feed_id IN (SELECT feed_in FROM project.user_feed WHERE user_id =" + user_id +
+                ")ORDER BY pubDate DESC LIMIT 10;"
+                
                 # pas bon refaire avec la nouvelle bdd
         ).all()
 

@@ -15,7 +15,7 @@ def save(article: Article, connection: Session):
             (article.feed_id, article.article_id, article.title, article.pubDate, article.description, article.link)
         )
         row = connection.execute(
-             "SELECT feed_id FROM project.feed WHERE feed_id = " + article.feed_id)
+             "SELECT feed_id FROM project.feed WHERE feed_id = " + article.feed_id).one()
         if row is None:
              connection.execute(
                   "INSERT INTO project.feed (feed_id) VALUES (%s);",

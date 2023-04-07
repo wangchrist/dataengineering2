@@ -44,7 +44,7 @@ def send_to_producer(url):
             print(f"Failed to send message to Kafka: {e}")
         producer.flush()
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
     # url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
     # #On appelle la fonction qui permet de scrapper les feeds 

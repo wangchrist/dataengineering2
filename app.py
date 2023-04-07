@@ -73,22 +73,26 @@ def user():
     return render_template('user.html', user_id=name, form=form)
 
 #Show one article given its id
-@app.route("/articles/test", methods=['GET', 'POST'])
+@app.route("/articles/one-article", methods=['GET', 'POST'])
 def one_article():
     form = Article_IdForm()
+    if request.method=="POST":
+        id = form.article_id
+        return redirect(url_for('display_article', id=id))
+    return render_template("FormOneArticle.html", form=form)
+
+#display the article
+@app.route("/articles/one-article/<id>", methods=['GET', 'POST'])
+def dispay_article(id):
     bdd = Cluster()
     session = bdd.connect()
     rep = ArticleRepository(session)
-    article=None
-    if request.method=="POST":
-        id = form.article_id
-        article = rep.findOneArticle(id) #Faudrait que la fonction retourne un "article erreur" si l'id n'existe pas 
-    return render_template("FormOneArticle.html", form=form)
+    article = rep.findOneArticle(id)
+    return render_template("OneArticle.html", article=article)
 
 #user's 10 last articles
-@app.route("/articles/userArticles")
-def ten_articles():
-    ID = "John"
+@app.route("/articles/<ID>")
+def ten_articles(ID):
     bdd = Cluster()
     session = bdd.connect()
     rep = ArticleRepository(session)

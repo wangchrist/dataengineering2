@@ -2,7 +2,7 @@ import json
 from kafka import KafkaConsumer
 from cassandra.cluster import Cluster, Session
 from confluent_kafka import Consumer
-from  article import Article
+from common.article import Article
 
 #pour lancer la console kafka : docker exec -it kafka /bin/sh 
 #kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic article-ingest --from-beginning
@@ -40,6 +40,7 @@ def save(article: Article, connection: Session):
 consumer = KafkaConsumer(
         'flux_rss',
         bootstrap_servers='localhost:9092',
+        api_version=(0, 10, 2),
         auto_offset_reset='earliest'
     )
 

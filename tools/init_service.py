@@ -8,7 +8,7 @@ if __name__ == '__main__':
         connection.execute("CREATE TABLE IF NOT EXISTS project.feed(feed_id text PRIMARY KEY)")
         connection.execute("CREATE TABLE IF NOT EXISTS project.user_feed(user_id text, feed_id text, PRIMARY KEY(user_id, feed_id)));")
             
-            # "CREATE TABLE IF NOT EXISTS project.user(user_id text PRIMARY KEY)")
+        connection.execute("CREATE TABLE IF NOT EXISTS project.user(user_id text PRIMARY KEY)")
         connection.execute("CREATE TABLE IF NOT EXISTS project.article(article_id text, feed_id text, title text, pubDate date, description text, link text, PRIMARY KEY ((feed_id), article_id))")
 
         connection.execute("")

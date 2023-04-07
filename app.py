@@ -25,10 +25,10 @@ class ArticleForm(FlaskForm):
     link = StringField("Put your link", validators=[DataRequired()])
     submit = SubmitField("Save")
     
-    def save(self, name):
+    def save(self):
         # link = Article(**self.link) #la classe Article dans common article.py
         # self.__class__.repository.saveArticles(self, link)
-        send_to_producer(self.link, name)
+        send_to_producer(self.link)
 
 class Article_IdForm(FlaskForm):
     article_id = StringField("Article_id you want to read", validators=[DataRequired()])
@@ -68,7 +68,7 @@ def user():
     if not name:
         return redirect(url_for('login'))
     if request.method == "POST":
-        form.save(name)
+        form.save()
         form.link.data = ''
     return render_template('user.html', user_id=name, form=form)
 
@@ -83,7 +83,17 @@ def one_article():
     if request.method=="POST":
         id = form.article_id
         article = rep.findOneArticle(id) #Faudrait que la fonction retourne un "article erreur" si l'id n'existe pas 
-    return render_template("OneArticle.html", article=article)
+    return render_template("FormOneArticle.html", form=form)
+
+#user's 10 last articles
+@app.route("/articles/userArticles")
+def ten_articles():
+    ID = session.get("name")
+    bdd = Cluster()
+    session = bdd.connect()
+    rep = ArticleRepository(session)
+    articles = rep.findLast10ArticleSummaries(ID)
+    return render_template("TenArticles.html", articles=articles)
 
 #Create custom error pages
 

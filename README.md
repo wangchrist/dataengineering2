@@ -37,12 +37,14 @@ Voici les étapes à suivre:
 > docker compose up
 ```
 
-- Maintenant, il faut télécharger les packages nécessaires à l'utilisation de notre projet qui sont cassandra, flask et common. Il faut donc taper dans un terminal ou visual studio code : 
+- Maintenant, il faut télécharger les packages nécessaires à l'utilisation de notre projet qui sont cassandra, flask, wtforms, common et kafka. Il faut donc taper dans un terminal ou visual studio code : 
  
  ```
  > pip3 install fask
  > pip3 install cassandra-driver
  > pip3 install common 
+ > pip3 install wtforms
+ > pip3 install kafka
  ``` 
  
  - On peut désormais lancer notre application : il faut lancer le code app.py avec la commande : 

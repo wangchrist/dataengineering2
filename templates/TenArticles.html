@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des articles</title>
+</head>
+<body>
+    <h1>Liste des articles</h1>
+    <ul>
+        {% for article in articles %}
+        <li>
+            <h2>{{ article.title }}</h2>
+            <p>Date de publication : {{ article.pubDate }}</p>
+            <p>Description : {{ article.description }}</p>
+            <a href="{{ article.link }}">Lien</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

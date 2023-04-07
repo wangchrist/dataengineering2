@@ -27,7 +27,6 @@ Voici les étapes à suivre:
 
  ```
 > git clone https://github.com/wangchrist/dataengineering2.git
-
  ```
  
 - Lancer l'application Docker Desktop
@@ -35,9 +34,7 @@ Voici les étapes à suivre:
 - Il faut créer le cluster Cassandra-Kafka. Pour cela il faut dans Visual Studio Code ou sur un terminal, d'abord se mettre dans le repertoire du projet puis taper la commande suivante :
 
 ```
-
 > docker compose up
-
 ```
 
 - Maintenant, il faut télécharger les packages nécessaires à l'utilisation de notre projet qui sont cassandra, flask et common. Il faut donc taper dans un terminal ou visual studio code : 
@@ -46,15 +43,12 @@ Voici les étapes à suivre:
  > pip3 install fask
  > pip3 install cassandra-driver
  > pip3 install common 
- 
  ``` 
  
  - On peut désormais lancer notre application : il faut lancer le code app.py avec la commande : 
  
  ``` 
- 
  python app.py
- 
  ``` 
  
 

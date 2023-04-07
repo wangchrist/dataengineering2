@@ -26,4 +26,6 @@ Voici les étapes à suivre:
 -Cloner le lien de notre git avec la commande suivante : 
 
  ```
-> git clone 
+> git clone https://github.com/wangchrist/dataengineering2.git
+
+

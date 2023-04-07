@@ -26,7 +26,7 @@ Voici les étapes à suivre:
 -Cloner le lien de notre git avec la commande suivante : 
 
  ```
-> git clone https://github.com/wangchrist/dataengineering2.git
+> git clone --branch master https://github.com/wangchrist/dataengineering2.git
  ```
 
 ## Comment run le projet ? 

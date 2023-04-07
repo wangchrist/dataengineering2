@@ -88,7 +88,7 @@ def one_article():
 #user's 10 last articles
 @app.route("/articles/userArticles")
 def ten_articles():
-    ID = session.get("name")
+    ID = "John"
     bdd = Cluster()
     session = bdd.connect()
     rep = ArticleRepository(session)

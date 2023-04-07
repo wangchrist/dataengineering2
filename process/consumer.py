@@ -2,7 +2,7 @@ import json
 from kafka import KafkaConsumer
 from cassandra.cluster import Cluster, Session
 from confluent_kafka import Consumer
-from  article import Article
+from common.article import Article
 
 #pour lancer la console kafka : docker exec -it kafka /bin/sh 
 #kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic article-ingest --from-beginning
@@ -36,19 +36,15 @@ def save(article: Article, connection: Session):
         #     "INSERT INTO project.user_feed (user_id, feed_id) VALUES (%s, %s);",
         #     (user_id, article.feed_id)
         # )
-        
 
-             
-            
-        
-if __name__ == '__main__':
-    # Kafka Consumer 
-    consumer = KafkaConsumer(
+consumer = KafkaConsumer(
         'flux_rss',
         bootstrap_servers='localhost:9092',
+        api_version=(0, 10, 2),
         auto_offset_reset='earliest'
     )
 
+def run_consumer():
     cluster = Cluster()
 
     try:
@@ -63,4 +59,13 @@ if __name__ == '__main__':
 
     finally:
         cluster.shutdown()
-        consumer.close()
+        consumer.close()         
+            
+        
+# if __name__ == '__main__':
+    # Kafka Consumer 
+    # consumer = KafkaConsumer(
+    #     'flux_rss',
+    #     bootstrap_servers='localhost:9092',
+    #     auto_offset_reset='earliest'
+    # )

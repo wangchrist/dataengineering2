@@ -2,7 +2,7 @@ import json
 from kafka import KafkaConsumer
 from cassandra.cluster import Cluster, Session
 from confluent_kafka import Consumer
-from common.article import Article
+from article import Article
 
 #pour lancer la console kafka : docker exec -it kafka /bin/sh 
 #kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic article-ingest --from-beginning
@@ -11,7 +11,7 @@ from common.article import Article
 
 def save(article: Article, connection: Session):
         connection.execute(
-            "INSERT INTO project.article (article_id, feed_id, title, pubDate, description, link, user_id) VALUES (%s, %s, %s, %s, %s, %s);",
+            "INSERT INTO project.article (article_id, feed_id, title, pubDate, description, link, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s);",
             (article.article_id, article.feed_id, article.title, article.pubDate, article.description, article.link, article.user_id)
         )
         # row = connection.execute(
@@ -40,8 +40,8 @@ def save(article: Article, connection: Session):
 consumer = KafkaConsumer(
         'flux_rss',
         bootstrap_servers='localhost:9092',
-        api_version=(0, 10, 2),
-        auto_offset_reset='earliest'
+        auto_offset_reset='earliest',
+        api_version=(0, 10, 2)
     )
 
 def run_consumer():
@@ -53,7 +53,7 @@ def run_consumer():
         for article in consumer:
             JsonArticle = json.loads(article.value)
             value = JsonArticle
-            article = Article(feed_id=value['feed_id'], article_id=value['article_id'], title=value['title'], pubDate=value['pubDate'], description=value['description'], link=value['link'], user_id=value['user_id'])
+            article = Article(feed_id=value['feed_id'], article_id=value['article_id'], title=value['title'], pubDate=value['pubDate'], description=value['description'], link=value['link'], user_id='user1')
             save(article, connection)
 
 
@@ -62,10 +62,25 @@ def run_consumer():
         consumer.close()         
             
         
-# if __name__ == '__main__':
-    # Kafka Consumer 
-    # consumer = KafkaConsumer(
-    #     'flux_rss',
-    #     bootstrap_servers='localhost:9092',
-    #     auto_offset_reset='earliest'
-    # )
+if __name__ == '__main__':
+    #Kafka Consumer 
+    consumer = KafkaConsumer(
+        'flux_rss',
+        bootstrap_servers='localhost:9092',
+        auto_offset_reset='earliest',
+        api_version=(0, 10, 2)
+    )
+    cluster = Cluster()
+
+    try:
+        connection = cluster.connect()
+
+        for article in consumer:
+            JsonArticle = json.loads(article.value)
+            value = JsonArticle
+            print(article)
+            article = Article(feed_id=value['feed_id'], article_id=value['article_id'], title=value['title'], pubDate=value['pubDate'], description=value['description'], link=value['link'], user_id='user1')
+            save(article, connection)
+    finally:
+        cluster.shutdown()
+        consumer.close()     

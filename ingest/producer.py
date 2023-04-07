@@ -10,7 +10,7 @@ import json
 
 
 def scraping_feed(url):
-    # for url in urls:
+   
     feed = feedparser.parse(url)
     rss_id =  ''.join(random.choice(string.ascii_letters) for i in range(32))
     articles =[]
@@ -41,22 +41,23 @@ def send_to_producer(url, name):
     for article in articles:
         article['user_id'] = name
         try:
-            producer.send('flux_rss', key = article['article_id'].encode(), value=json.dumps(article).encode())
+            producer.send('flux',value=json.dumps(article).encode())
+            #key = article['article_id'].encode()
         except KafkaError as e:
             print(f"Failed to send message to Kafka: {e}")
         producer.flush()
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-    # url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
-    # #On appelle la fonction qui permet de scrapper les feeds 
-    # articles = scraping_feed(url)
+    url = "https://www.cert.ssi.gouv.fr/alerte/feed/"
+    #On appelle la fonction qui permet de scrapper les feeds 
+    articles = scraping_feed(url)
 
-
-    # #on envoie chaque article dans le producer kafka pour les stocker
-    # for article in articles:
-    #     try:
-    #         producer.send('flux_rss', key = article['article_id'].encode(), value=json.dumps(article).encode())
-    #     except KafkaError as e:
-    #         print(f"Failed to send message to Kafka: {e}")
-    #     producer.flush()
+    #on envoie chaque article dans le producer kafka pour les stocker
+    for article in articles:
+        article['user_id'] = 'user1'
+        try:
+            producer.send('flux_rss', key = article['article_id'].encode(), value=json.dumps(article).encode())
+        except KafkaError as e:
+            print(f"Failed to send message to Kafka: {e}")
+        producer.flush()

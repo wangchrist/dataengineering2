@@ -20,12 +20,49 @@ Pour ce projet, nous avons décidé de scraper des articles qui proviennent de d
 
 
 
-## Comment lancer le projet ?
+## Comment cloner le projet ?
 Voici les étapes à suivre:
 
 -Cloner le lien de notre git avec la commande suivante : 
 
  ```
 > git clone https://github.com/wangchrist/dataengineering2.git
+ ```
+
+## Comment run le projet ? 
+
+Connecter d'abord la base de données Cassandrea en faisant : 
+
+ ```
+> python tools/init_service.py 
+ ```
+ 
+Pour lancer l'application flask : 
+
+ ```
+> python app.py
+ ```
+ 
+
+Pour intégrer des données dans la base de données en passant par Kafka :   
+
+1. Lancer le producer pour écrire des données dans kafka  
+
+ ```
+> python ingest/producer.py
+ ```
+
+2. Le fichier consumer.py permet de lire les données dans le topic de kafka. A l'exécution de la commende suivante, les données s'affichent dans le terminal : 
+
+	```
+> python process/consumer.py
+ ```
+ 
+Le fichier 
+
+
+
+
+
 
 

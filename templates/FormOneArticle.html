@@ -1,0 +1,20 @@
+{%extends 'base.html'%}
+
+
+{%block other%}
+
+    <h1>Search an article with its ID</h1>
+    <br/>
+    <form method="POST" action="{{ url_for('article', article_id='') }}">
+       
+        {{form.article_id.label(
+            class="form-label"
+        )}}
+        {{form.article_id(
+            class="form-control"
+        )}}
+        <br/>
+        <button class="btn btn-secondary" type="submit">Search</button>
+    </form>
+
+{% endblock %}

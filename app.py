@@ -4,6 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, FieldList
 from wtforms.validators import DataRequired
 
+from cassandra.cluster import Cluster
 from common.article import Article
 from common.repository import ArticleRepository
 from ingest.producer import send_to_producer
@@ -28,6 +29,10 @@ class ArticleForm(FlaskForm):
         # link = Article(**self.link) #la classe Article dans common article.py
         # self.__class__.repository.saveArticles(self, link)
         send_to_producer(self.link, name)
+
+class Article_IdForm(FlaskForm):
+    article_id = StringField("Article_id you want to read", validators=[DataRequired()])
+    submit = SubmitField("Search")
 
 
 #Routers
@@ -66,6 +71,19 @@ def user():
         form.save(name)
         form.link.data = ''
     return render_template('user.html', user_id=name, form=form)
+
+#Show one article given its id
+@app.route("/articles/test", methods=['GET', 'POST'])
+def one_article():
+    form = Article_IdForm()
+    bdd = Cluster()
+    session = bdd.connect()
+    rep = ArticleRepository(session)
+    article=None
+    if request.method=="POST":
+        id = form.article_id
+        article = rep.findOneArticle(id) #Faudrait que la fonction retourne un "article erreur" si l'id n'existe pas 
+    return render_template("OneArticle.html", article=article)
 
 #Create custom error pages
 

@@ -1,11 +1,11 @@
-{%extends 'base.html'%}
+{%extends 'base_content.html'%}
 
 
-{%block other%}
+{%block content%}
 
     <h1>Search an article with its ID</h1>
     <br/>
-    <form method="POST" action="{{ url_for('article', article_id='') }}">
+    <form method="POST" action="{{ url_for('one_article') }}">
        
         {{form.article_id.label(
             class="form-label"

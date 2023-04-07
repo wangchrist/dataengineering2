@@ -33,11 +33,12 @@ producer = KafkaProducer(
     bootstrap_servers=['localhost:9092'],
 )
 
-def send_to_producer(url):
+def send_to_producer(url, name):
     articles = scraping_feed(url)
 
     #on envoie chaque article dans le producer kafka pour les stocker
     for article in articles:
+        article['user_id'] = name
         try:
             producer.send('flux_rss', key = article['article_id'].encode(), value=json.dumps(article).encode())
         except KafkaError as e:

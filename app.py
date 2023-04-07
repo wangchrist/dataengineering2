@@ -24,10 +24,10 @@ class ArticleForm(FlaskForm):
     link = StringField("Put your link", validators=[DataRequired()])
     submit = SubmitField("Save")
     
-    def save(self):
+    def save(self, name):
         # link = Article(**self.link) #la classe Article dans common article.py
         # self.__class__.repository.saveArticles(self, link)
-        send_to_producer(self.link)
+        send_to_producer(self.link, name)
 
 
 #Routers
@@ -63,7 +63,7 @@ def user():
     if not name:
         return redirect(url_for('login'))
     if request.method == "POST":
-        form.save()
+        form.save(name)
         form.link.data = ''
     return render_template('user.html', user_id=name, form=form)
 
